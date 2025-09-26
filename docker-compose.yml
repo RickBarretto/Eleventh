@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: eleventh-redis
+    ports:
+      - "6379:6379"
+
+  server1:
+    build: .
+    container_name: eleventh-server-1
+    environment:
+      - PORT=8000
+      - REDIS_HOST=redis
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  server2:
+    build: .
+    container_name: eleventh-server-2
+    environment:
+      - PORT=8001
+      - REDIS_HOST=redis
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis

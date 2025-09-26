@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "esnext"],
+        "target": "esnext"
+    },
+    "tasks": {
+        "start": "deno run --allow-net --allow-env src/server.ts",
+        "start:prod": "deno run --allow-net --allow-env --unstable src/server.ts",
+        "seed": "deno run --allow-net scripts/seed_packs.ts",
+        "test:claim": "deno run --allow-net scripts/claim_test.ts"
+    }
+}
