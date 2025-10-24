@@ -18,13 +18,11 @@ type Username = str
 def subscribers() -> Cluster:
     raise NotImplementedError("You must override this.")
 
-_store = Store()
 def get_store() -> Store:
-    return _store
+    raise NotImplementedError("You must override this.")
     
-_decks = Decks()
 def get_decks() -> Decks:
-    return _decks
+    raise NotImplementedError("You must override this.")
 
 
 @api.post("/global/deck/regenerate")
