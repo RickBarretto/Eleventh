@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 from fastapi import APIRouter, Depends
 from fastapi.routing import Annotated
-from pydantic import UUID4
 
 from decks.model.card import Card
 from decks.model.store import Store
