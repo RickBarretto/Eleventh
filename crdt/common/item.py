@@ -29,9 +29,9 @@ class Item[T]:
     ----------
     id: ItemID
         The unique identifier for the item.
-    value: T 
+    value: T
         The value stored in the item.
-    deleted: bool 
+    deleted: bool
         A flag indicating whether the item has been logically deleted.
     """
 
@@ -52,7 +52,7 @@ class Item[T]:
             True if the item is not deleted, False otherwise.
         """
         return not self._deleted
-    
+
     def deleted(self) -> bool:
         """Check if the item is deleted.
 

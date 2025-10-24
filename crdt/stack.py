@@ -108,7 +108,7 @@ class Stack[T]:
         other : Stack[T]
             The other stack to merge with.
         """
-        if self.node != other.node: 
+        if self.node != other.node:
             message = "Cannot merge stacks from different nodes."
             raise ValueError(message)
 
@@ -119,8 +119,7 @@ class Stack[T]:
             if item.id not in existing_ids:
                 self.items.append(item)
             else:
-                index = next(i for i, it in enumerate(
-                    self.items) if it.id == item.id)
+                index = next(i for i, it in enumerate(self.items) if it.id == item.id)
                 if item.deleted() and self.items[index].exists():
                     self.items[index].delete()
 

@@ -11,8 +11,10 @@ api = APIRouter(prefix="subscriber")
 
 # Placeholder for service providers
 
+
 def get_store() -> Store:
     raise NotImplementedError("You must override this.")
+
 
 def get_decks() -> Decks:
     raise NotImplementedError("You must override this.")
@@ -22,20 +24,22 @@ def get_decks() -> Decks:
 
 type Username = str
 
+
 class Cards(BaseModel):
     cards: list[Card]
 
 
 # Routes
 
+
 @api.post("/store")
 async def new_store(
     cards: Cards,
-    
     store: Annotated[Store, Depends(get_store)],
 ):
     store.cards = cards.cards
-    return { "status": "updated" }
+    return {"status": "updated"}
+
 
 @api.post("/claim")
 async def claim(
@@ -43,18 +47,14 @@ async def claim(
 ):
     try:
         store.pop()
-        return { "status": "updated" }
+        return {"status": "updated"}
     except Exception as e:
-        return { "status": "failed", "message": str(e) }
+        return {"status": "failed", "message": str(e)}
 
 
 @api.post("/{user}/add")
 async def add_to_user(
-    user: Username,
-    cards: Cards,
-    
-    decks: Annotated[Decks, Depends(get_decks)]
+    user: Username, cards: Cards, decks: Annotated[Decks, Depends(get_decks)]
 ):
     decks.add_to(user, cards.cards)
-    return { "status": "updated" }
-    
+    return {"status": "updated"}

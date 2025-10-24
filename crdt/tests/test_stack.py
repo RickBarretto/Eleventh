@@ -44,13 +44,14 @@ def test_item_ids_and_clock_increment():
     assert stack.items[0].id.node == "X", "Node ID should match"
     assert stack.items[1].id.node == "X", "Node ID should match"
 
-    assert stack.items[0].id.clock < stack.items[1].id.clock, "Clock should increment for each item"
+    assert stack.items[0].id.clock < stack.items[1].id.clock, (
+        "Clock should increment for each item"
+    )
     assert stack.items[0].id.clock >= 1, "Clock should start at 1"
     assert stack.items[1].id.clock >= 1, "Clock should start at 1"
 
 
 def test_merge_adds_missing_items_and_sorts():
-
     rick = Stack[str](node="Rick")
     rick.push("Morty", "Summer")
 
@@ -59,8 +60,9 @@ def test_merge_adds_missing_items_and_sorts():
 
     rick.merge(sanchez)
 
-    assert rick.values() == ["Morty", "Summer", "Beth"], \
+    assert rick.values() == ["Morty", "Summer", "Beth"], (
         "Merged stack should contain all unique items sorted"
+    )
 
 
 def test_merge_propagates_deletion():

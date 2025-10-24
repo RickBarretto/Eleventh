@@ -21,11 +21,12 @@ class InsufficientStock[T](LookupError):
             f"Insufficient stock. Tried to request {self.requested} items "
             f"but only {len(self.available)} available."
         )
-        
+
+
 @attrs.frozen
 class OwnerNotFound(KeyError):
     owner: str
-    
+
     @override
     def __str__(self) -> str:
         return f"Owner {self.owner} not found."
@@ -45,7 +46,7 @@ class CardStock:
         owner = by
         if len(self.available) < amount:
             raise InsufficientStock[Card](available=self.available, requested=amount)
-        
+
         claimed = self.available[:amount]
         del self.available[:amount]
         self.owned[owner].extend([card for card in claimed])
