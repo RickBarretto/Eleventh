@@ -50,7 +50,7 @@ async def claim_card(
         await regenerate(subscribers=subscribers)
     
     claimed = store.claim()
-    decks.add(claimed)
+    decks.add_to(user, claimed)
     await subscribers.broadcast.post("/subscriber/{user}/add", json={
         "cards": claimed
     })
