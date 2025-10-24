@@ -61,8 +61,11 @@ This project uses virtual environment managed by Poetry, so make sure you have t
 
 ### Getting Rewards
 
-- Token Ring
-- Updates the commits from the previous, and then from itself
+- ~~Token Ring~~
+- ~~Updates the commits from the previous, and then from itself~~
+
+- Causal consistency  
+  - See: https://arxiv.org/pdf/1805.06358
 
 ### Managing User's Deck
 
