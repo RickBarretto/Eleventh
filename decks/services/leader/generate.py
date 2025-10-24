@@ -5,6 +5,7 @@ from pydantic import UUID4
 
 from decks.model.card import Card
 from decks.model.store import Store
+from decks.model.deck import Decks
 
 if TYPE_CHECKING:
     from plugins.cluster.model import Cluster
