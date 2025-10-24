@@ -26,20 +26,20 @@ def get_decks() -> Decks:
     raise NotImplementedError("You must override this.")
 
 
-@api.post("/global/deck/regenerate")
+@api.post("/store/regenerate")
 async def regenerate(
     store: Annotated[Store, Depends(get_store)],
     subscribers: Annotated[Cluster, Depends(subscribers)]
 ) -> list[Card]:
     AMOUNT = 500
     cards = store.regenerate(AMOUNT)
-    await subscribers.broadcast.post("/subscriber/global/", json={
+    await subscribers.broadcast.post("/store", json={
         "cards": cards
     })
     return { "status": "ok" }
 
 
-@api.post("/{user}/claim")
+@api.post("/{user}/store/claim")
 async def claim_card(
     user: Username,
     
@@ -52,7 +52,8 @@ async def claim_card(
     
     claimed = store.claim()
     decks.add_to(user, claimed)
-    await subscribers.broadcast.postra("/subscriber/{user}/add", json={
+    await subscribers.broadcast.post("/store/claim")
+    await subscribers.broadcast.post(f"{user}/add", json={
         "cards": claimed
     })
     return { "status": "ok" }
