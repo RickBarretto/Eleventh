@@ -29,4 +29,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-q"
-testpaths = ["tests", "eleventh"]
+testpaths = ["*/tests"]
