@@ -5,7 +5,7 @@ from decks.model.card import Card
 from .deps import DecksService, StoreService
 
 
-api = APIRouter(prefix="subscriber")
+api = APIRouter(prefix="follower")
 
 
 type Username = str

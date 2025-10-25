@@ -14,11 +14,12 @@ class Leader:
     id: str
     url: str
     followers: list[Follower]
+    prefix: str = "/follower"
     
     @property
     def broadcast(self) -> Broadcast:
         clients = [f.url for f in self.followers]
-        return Broadcast(clients, self.url)
+        return Broadcast(clients, self.prefix)
 
 
 class Follower(Protocol):
