@@ -1,25 +1,22 @@
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 from fastapi import APIRouter, Depends
 
-from decks.model.card import Card
 from decks.model.store import Store
 from decks.model.deck import Decks
-
-if TYPE_CHECKING:
-    from plugins.cluster.model import Cluster
+from plugins.leader.leader import Leader
 
 api = APIRouter(prefix="/leader")
 
 type Username = str
 
-
-def subscribers() -> Cluster:
+def get_cluster():
     raise NotImplementedError("You must override this.")
 
+def get_leader() -> Leader:
+    raise NotImplementedError("You must override this.")
 
 def get_store() -> Store:
     raise NotImplementedError("You must override this.")
-
 
 def get_decks() -> Decks:
     raise NotImplementedError("You must override this.")
@@ -28,11 +25,11 @@ def get_decks() -> Decks:
 @api.post("/store/regenerate")
 async def regenerate(
     store: Annotated[Store, Depends(get_store)],
-    subscribers: Annotated[Cluster, Depends(subscribers)],
+    leader: Annotated[Leader, Depends(get_leader)],
 ):
     AMOUNT = 500
     cards = store.regenerate(AMOUNT)
-    await subscribers.broadcast.post("/store", json={"cards": cards})
+    await leader.broadcast.post("/store", json={"cards": cards})
     return {"status": "ok"}
 
 
@@ -41,13 +38,13 @@ async def claim_card(
     user: Username,
     store: Annotated[Store, Depends(get_store)],
     decks: Annotated[Store, Depends(get_decks)],
-    subscribers: Annotated[Cluster, Depends(subscribers)],
+    leader: Annotated[Leader, Depends(get_leader)],
 ):
     if store.is_empty():
-        await regenerate(subscribers=subscribers)
+        await regenerate(leader=leader)
 
     claimed = store.claim()
     decks.add_to(user, claimed)
-    await subscribers.broadcast.post("/store/claim")
-    await subscribers.broadcast.post(f"{user}/add", json={"cards": claimed})
+    await leader.broadcast.post("/store/claim")
+    await leader.broadcast.post(f"{user}/add", json={"cards": claimed})
     return {"status": "ok"}
