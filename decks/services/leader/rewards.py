@@ -1,6 +1,5 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
-from fastapi.routing import Annotated
 
 from decks.model.card import Card
 from decks.model.store import Store
