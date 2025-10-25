@@ -29,7 +29,7 @@ def get_decks() -> Decks:
 async def regenerate(
     store: Annotated[Store, Depends(get_store)],
     subscribers: Annotated[Cluster, Depends(subscribers)],
-) -> list[Card]:
+):
     AMOUNT = 500
     cards = store.regenerate(AMOUNT)
     await subscribers.broadcast.post("/store", json={"cards": cards})
