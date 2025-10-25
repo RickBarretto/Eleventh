@@ -10,6 +10,7 @@ api = APIRouter(prefix="follower")
 
 type Username = str
 
+
 class Cards(BaseModel):
     cards: list[Card]
 

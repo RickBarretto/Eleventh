@@ -14,13 +14,10 @@ def get_leader() -> Leader:
 
 type Username = str
 
-    
+
 @api.post("/{user}/trade/{card}")
 async def trade_card(
-    user: Username, 
-    card: UUID4, 
-    
-    leader: Annotated[Leader, Depends(get_leader)]
+    user: Username, card: UUID4, leader: Annotated[Leader, Depends(get_leader)]
 ):
     pass
 

@@ -32,7 +32,7 @@ class Follower:
             return response.is_success
         except Exception:
             return False
-        
+
 
 class Leader(Protocol):
     id: str

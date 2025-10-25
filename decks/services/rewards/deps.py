@@ -1,5 +1,3 @@
-
-
 from typing import Annotated
 
 from fastapi import Depends
@@ -15,17 +13,22 @@ __all__ = [
     "DecksService",
 ]
 
+
 def get_cluster() -> Cluster:
     raise NotImplementedError("You must override this.")
+
 
 def get_leader() -> Leader:
     raise NotImplementedError("You must override this.")
 
+
 def get_store() -> Store:
     raise NotImplementedError("You must override this.")
 
+
 def get_decks() -> Decks:
     raise NotImplementedError("You must override this.")
+
 
 type ClusterService = Annotated[Cluster, Depends(get_cluster)]
 type LeaderService = Annotated[Leader, Depends(get_leader)]

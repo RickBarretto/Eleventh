@@ -6,18 +6,16 @@ from typing import Self
 import attrs
 from httpx import AsyncClient
 
+
 @attrs.frozen
 class Broadcast:
     _followers: list[str]
     _prefix: str = "/follower"
-    
+
     @property
     def followers(self) -> list[str]:
-        return [
-            follower.strip("/") 
-            for follower in self._followers
-        ]
-    
+        return [follower.strip("/") for follower in self._followers]
+
     @property
     def prefix(self) -> str:
         return self._prefix.strip("/")
@@ -33,9 +31,7 @@ class Broadcast:
         tasks = []
         for client in self.clients:
             url = path.lstrip("/")
-            tasks.append(
-                client.request(method, url, **kwargs)
-            )
+            tasks.append(client.request(method, url, **kwargs))
         responses = await asyncio.gather(*tasks, return_exceptions=True)
         return responses
 
@@ -45,9 +41,9 @@ class Broadcast:
     async def __aexit__(self, exc_type, exc_value, traceback) -> None:
         tasks = [client.aclose() for client in self.clients]
         await asyncio.gather(*tasks)
-    
+
     async def get(self, path: str, **kwargs) -> list:
         return await self.request("GET", path, **kwargs)
-    
+
     async def post(self, path: str, **kwargs) -> list:
         return await self.request("POST", path, **kwargs)

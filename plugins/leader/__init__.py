@@ -12,24 +12,22 @@ from plugins.leader.follower import Follower
 class LeaderFollower:
     cluster: Cluster
     current_node: str
-    
+
     @property
     async def leader(self) -> Leader:
         leader_node = await self._candidate()
         leader_id, leader_url = leader_node.split("@")
         leader = Leader(id=leader_id, url=leader_url, followers=[])
-    
+
         followers: list[Follower] = list(
             map(
                 lambda node: Follower(
-                    id=node.split("@")[0],
-                    url=node.split("@")[1],
-                    follows=leader
+                    id=node.split("@")[0], url=node.split("@")[1], follows=leader
                 ),
-                filter(lambda node: node != leader_node, self.cluster.nodes)
+                filter(lambda node: node != leader_node, self.cluster.nodes),
             )
         )
-        
+
         leader.followers = followers
         return leader
 

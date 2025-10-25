@@ -15,7 +15,7 @@ class Leader:
     url: str
     followers: list[Follower]
     prefix: str = "/follower"
-    
+
     @property
     def broadcast(self) -> Broadcast:
         clients = [f.url for f in self.followers]
