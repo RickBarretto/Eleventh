@@ -37,7 +37,7 @@ async def new_store(
     cards: Cards,
     store: Annotated[Store, Depends(get_store)],
 ):
-    store.cards = cards.cards
+    store.re_stock(cards.cards)
     return {"status": "updated"}
 
 
@@ -46,7 +46,7 @@ async def claim(
     store: Annotated[Store, Depends(get_store)],
 ):
     try:
-        store.pop()
+        store.claim()
         return {"status": "updated"}
     except Exception as e:
         return {"status": "failed", "message": str(e)}
@@ -56,5 +56,5 @@ async def claim(
 async def add_to_user(
     user: Username, cards: Cards, decks: Annotated[Decks, Depends(get_decks)]
 ):
-    decks.add_to(user, cards.cards)
+    decks.add_to(user, *cards.cards)
     return {"status": "updated"}
