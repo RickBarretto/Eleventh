@@ -10,6 +10,9 @@ class Store(BaseModel):
         cards = [Card.random() for _ in range(amount)]
         self._stored = cards
         return cards
+    
+    def re_stock(self, cards: list[Card]) -> None:
+        self._stored = cards
 
     def is_empty(self) -> bool:
         return self._stored == []
