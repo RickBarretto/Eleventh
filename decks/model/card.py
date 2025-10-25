@@ -1,4 +1,4 @@
-from random import random
+import random
 from typing import Self
 from uuid import uuid4
 
