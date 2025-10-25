@@ -69,8 +69,7 @@ from cyclopts import App as Cyclopts
 from fastapi import FastAPI
 
 from plugins.cluster import plug_cluster
-from decks.service.api import service
-from decks.service.web import pages
+from decks.services.rewards import api as rewards
 
 webapp = FastAPI(
     title="Deck Management Service",
@@ -79,8 +78,8 @@ webapp = FastAPI(
 )
 cli = Cyclopts("decks", help="Deck Management Service.")
 
-webapp.include_router(service)
-webapp.include_router(pages)
+webapp.get("/leader")(lambda: {"status": "ok"})
+webapp.include_router(rewards)
 plug_cluster(cli, webapp)
 
 if __name__ == "__main__":
