@@ -20,5 +20,5 @@ class Database[K, T](defaultdict[K, T]):
 class Decks(BaseModel):
     map: Database[Username, Deck] = Database()
 
-    def add_to(self, user: Username, cards: list[Card]):
-        self.map[user].extend(cards)
+    def add_to(self, user: Username, cards: Card):
+        self.map[user].append(cards)
