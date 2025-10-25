@@ -37,11 +37,11 @@ async def regenerate(
 async def claim_card(
     user: Username,
     store: Annotated[Store, Depends(get_store)],
-    decks: Annotated[Store, Depends(get_decks)],
+    decks: Annotated[Decks, Depends(get_decks)],
     leader: Annotated[Leader, Depends(get_leader)],
 ):
     if store.is_empty():
-        await regenerate(leader=leader)
+        await regenerate(store=store, leader=leader)
 
     claimed = store.claim()
     decks.add_to(user, claimed)
