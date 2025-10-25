@@ -1,11 +1,14 @@
-from fastapi import APIRouter
+from typing import Annotated
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from decks.model.card import Card
-from .deps import DecksService, StoreService
+from decks.model.deck import Decks
+from decks.model.store import Store
+from .deps import get_store, get_decks
 
 
-api = APIRouter(prefix="follower")
+api = APIRouter(prefix="/follower")
 
 
 type Username = str
@@ -16,13 +19,13 @@ class Cards(BaseModel):
 
 
 @api.post("/store")
-async def new_store(cards: Cards, store: StoreService):
+async def new_store(cards: Cards, store: Annotated[Store, Depends(get_store)]):
     store.re_stock(cards.cards)
     return {"status": "updated"}
 
 
 @api.post("/claim")
-async def claim(store: StoreService):
+async def claim(store: Annotated[Store, Depends(get_store)]):
     try:
         store.claim()
         return {"status": "updated"}
@@ -31,6 +34,6 @@ async def claim(store: StoreService):
 
 
 @api.post("/{user}/add")
-async def add_to_user(user: Username, cards: Cards, decks: DecksService):
+async def add_to_user(user: Username, cards: Cards, decks: Annotated[Decks, Depends(get_decks)]):
     decks.add_to(user, *cards.cards)
     return {"status": "updated"}

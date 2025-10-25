@@ -1,36 +1,22 @@
-from typing import Annotated
-
-from fastapi import Depends
 from decks.model.deck import Decks
 from decks.model.store import Store
 from plugins.cluster.model import Cluster
 from plugins.leader.leader import Leader
 
-__all__ = [
-    "ClusterService",
-    "LeaderService",
-    "StoreService",
-    "DecksService",
-]
+async def get_cluster() -> Cluster:
+    """Get cluster instance. Overridden by plugin."""
+    raise NotImplementedError("You must override this by calling plug_decks.")
 
 
-def get_cluster() -> Cluster:
-    raise NotImplementedError("You must override this.")
+async def get_leader() -> Leader:
+    """Get leader instance. Overridden by plugin."""
+    raise NotImplementedError("You must override this by calling plug_decks.")
+
+async def get_store() -> Store:
+    """Get store instance. Overridden by plugin."""
+    raise NotImplementedError("You must override this by calling plug_decks.")
 
 
-def get_leader() -> Leader:
-    raise NotImplementedError("You must override this.")
-
-
-def get_store() -> Store:
-    raise NotImplementedError("You must override this.")
-
-
-def get_decks() -> Decks:
-    raise NotImplementedError("You must override this.")
-
-
-type ClusterService = Annotated[Cluster, Depends(get_cluster)]
-type LeaderService = Annotated[Leader, Depends(get_leader)]
-type StoreService = Annotated[Store, Depends(get_store)]
-type DecksService = Annotated[Decks, Depends(get_decks)]
+async def get_decks() -> Decks:
+    """Get decks instance. Overridden by plugin."""
+    raise NotImplementedError("You must override this by calling plug_decks.")

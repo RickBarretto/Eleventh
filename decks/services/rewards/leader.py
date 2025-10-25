@@ -5,7 +5,7 @@ from decks.model.store import Store
 from decks.model.deck import Deck, Decks
 from plugins.leader.leader import Leader
 
-from .deps import DecksService, LeaderService, StoreService
+from .deps import get_decks, get_store, get_leader
 
 api = APIRouter(prefix="/leader")
 
@@ -13,7 +13,7 @@ type Username = str
 
 
 @api.post("/store/regenerate")
-async def regenerate(store: StoreService, leader: LeaderService):
+async def regenerate(store: Annotated[Store, Depends(get_store)], leader: Annotated[Leader, Depends(get_leader)]):
     AMOUNT = 500
     cards = store.regenerate(AMOUNT)
     await leader.broadcast.post("/store", json={"cards": cards})
@@ -23,9 +23,9 @@ async def regenerate(store: StoreService, leader: LeaderService):
 @api.post("/{user}/store/claim")
 async def claim_card(
     user: Username,
-    store: StoreService,
-    decks: DecksService,
-    leader: LeaderService,
+    store: Annotated[Store, Depends(get_store)],
+    decks: Annotated[Decks, Depends(get_decks)],
+    leader: Annotated[Leader, Depends(get_leader)],
 ):
     if store.is_empty():
         await regenerate(store=store, leader=leader)
