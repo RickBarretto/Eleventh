@@ -9,7 +9,7 @@ from httpx import AsyncClient
 @attrs.frozen
 class Broadcast:
     _followers: list[str]
-    _prefix: str = "/"
+    _prefix: str = "/subscriber"
     
     @property
     def followers(self) -> list[str]:
