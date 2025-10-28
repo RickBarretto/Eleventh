@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./server
+    container_name: chat_server
+
+  client1:
+    build:
+      context: ./client
+    container_name: chat_client1
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true
+
+  client2:
+    build:
+      context: ./client
+    container_name: chat_client2
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true

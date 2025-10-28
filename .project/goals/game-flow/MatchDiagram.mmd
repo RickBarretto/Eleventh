@@ -1,0 +1,35 @@
+sequenceDiagram
+    actor PlayerA
+    participant ClientA
+    participant Server
+    participant ClientB
+    actor PlayerB
+
+    loop 10 Turns
+        par PlayerA and PlayerB choose simultaneously
+            PlayerA ->> ClientA: Select Card + Action
+            PlayerB ->> ClientB: Select Card + Action
+        end
+
+        par Clients send choices
+            ClientA ->> Server: Send Play (PlayerA)
+            ClientB ->> Server: Send Play (PlayerB)
+        end
+
+        Server ->> Server: Resolve Turn (Compare Stats + Specials + Stamina)
+        Server -->> ClientA: Outcome (Goal, Possession, Turnover)
+        Server -->> ClientB: Outcome (Goal, Possession, Turnover)
+    end
+
+    Server ->> Server: Check Final Score
+    alt Win/Loss
+        Server -->> ClientA: Match Results
+        Server -->> ClientB: Match Results
+    else Tie
+        Server ->> Server: Run Penalty Shootout
+        Server -->> ClientA: Final Result
+        Server -->> ClientB: Final Result
+    end
+
+    ClientA -->> PlayerA: End of Match
+    ClientB -->> PlayerB: End of Match

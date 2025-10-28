@@ -1,0 +1,37 @@
+sequenceDiagram
+    actor Player
+    participant EleventhApp
+    participant Server
+    participant Database
+
+    %% Menu & Login
+    Player ->> EleventhApp: Open Game
+    EleventhApp ->> Server: Request Login
+    Server ->> Database: Verify Credentials
+    Database -->> Server: Return User Data
+    Server -->> EleventhApp: Login Success (Profile, Decks, Rewards)
+
+    %% Rewards
+    Player ->> EleventhApp: Open Rewards Menu
+    EleventhApp ->> Server: Request Available Packs
+    Server ->> Database: Check Global Pack Stock
+    Database -->> Server: Pack Availability
+    Server -->> EleventhApp: Show Packs
+    Player ->> EleventhApp: Open Pack
+    EleventhApp ->> Server: Redeem Pack
+    Server ->> Database: Update Stock / Assign Cards
+    Database -->> Server: Confirmation
+    Server -->> EleventhApp: Return Cards Gained
+
+    %% Matchmaking
+    Player ->> EleventhApp: Start Match
+    EleventhApp ->> Server: Matchmaking Request
+    Server ->> Database: Check Player Status
+    Server ->> Server: Pair Player with Opponent
+    Server -->> EleventhApp: Match Found (Formation Setup)
+
+    EleventhApp ->> Server: Join Match
+    Server -->> EleventhApp: Match End (Rewards)
+
+    %% Return to Menu
+    EleventhApp ->> Player: Show Rewards / Menu Options

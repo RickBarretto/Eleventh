@@ -10,18 +10,17 @@
 Players build their own dream team using collectible cards, manage tactics, and compete in tactical duels against other managers. 
 
 
-## Notice
+## At A Glance
 
-This is the 2nd version of this project and this is under maintenance.
-Since the 2nd problem of the PBL differs a lot in architecture from the 1st one,
-this is needed a new major version with possible breaking changes.
+<p align="center">
+    <img src=".project/images/main-menu.png" alt="Menu" width="400" style="max-width:100%;">
+    <p align="center">Eleventh's Main Menu</p>
+</p>
 
-Now, this is possible to use HTTP frameworks, so QuickAPI will be deprecated.
-Since the focus now is fault-tolerant system, I'll choose Typescript (Deno) or Elixir
-to handle this correctly.
-
-If you need to see the old project, open the `v1.0.0` tag version,
-open on Github or do this using git commands.
+<p align="center">
+    <img src=".project/images/multiplayer.png" alt="1v1 Match" width="400" style="max-width:100%;">
+    <p align="center">1v1 multiplayer match</p>
+</p>
 
 
 ## PBL Context
@@ -32,58 +31,85 @@ In PBL, students work in groups to solve open-ended problems, progressing step b
 
 Because of this nature, I've created the `.project/` folder that have the sessions summaries, goals and others.
 
+## Usage
 
-## Architecture
+### Development
 
-This project follows the craftsmanship principles. This is organized by using the Vertical-Slice, but implementing Clean Architecture + Some DDD Principles.
+To use the system locally without Docker, see the following instructions.
+This is needed to ensure portability, mainly for systems that can't run Docker,
+and also quick development, where build time counts a lot.
 
-This was decided to go with microsservices since this probably fits well to this problem and I can scale each service individually as it needs to. Each available service goes into `eleventh/service` and shared code goes on `eleventh/shared`.
+**Starting the server**
 
-Each service has its own REST APIs, RPCs, Repositories and its own algorithms for distributed system. Each of them with their own tests and also running instructions. Reach each documentation for more information.
+```sh
+$ cargo run -p server
+```
 
-## Running it
+**Starting the client** (Do for every client)
 
-It's possible to run this project in three different ways: locally, locally into containers, distributed across machines into containers. The first one allow us to test it on development. The second one for demonstration and the third one for real systems.
+```sh
+$ cargo run -p eleventh
+```
 
-Don't take the application itself too seriously, I am not trying to solve a gaming problem, but a distributed system one. So, the game UI and logic won't be that fun or any great.
+**Running tests**
 
-## Tooling
+```sh
+$ cargo test
+```
 
-This project uses virtual environment managed by Poetry, so make sure you have this installed to run this properly.
+### Production
 
+Required by the problem, the production environment is Docker-based,
+where the server and each client are into their own containers.
 
-## Strategies
+**Building the whole system**
 
-### Generating Rewards
+> [!NOTE]
+> You can't just use `docker compose up`, and instead, you need to build it before
+> actually run. This happens because the peers doesn't interact with them automatically,
+> clients needs to interact via terminal (so this needs a user to control it).
+> Due to this nature, you need to build it, and then run each on their own terminal.
 
-- Bully (easier to implement)
-- Leader-Follower
+```sh
+$ docker compose build
+```
 
-### Getting Rewards
+**Starting the server**
 
-- ~~Token Ring~~
-- ~~Updates the commits from the previous, and then from itself~~
+```sh
+$ docker compose run --rm server
+```
 
-- Causal consistency  
-  - See: https://arxiv.org/pdf/1805.06358
+**Starting the client** (for each one)
 
-### Managing User's Deck
+> [!TIP]
+> If you're using a terminal emulator that supports split terminals, just do this.
+> The TUI simply resizes itself to adapt to the terminal size, so I hope there is 
+> no problem doing it if the horizontal size is enough.
+> 
+> VsCode, Windows Terminal have support to split it. This would improve your workflow for testing.
+> On VsCode, I generally put the server on top and two clients side-by-side on bottom.
 
-- Eventually consistent
-- Follower Reads for Queries
+```sh
+$ docker compose run --rm client
+```
 
-### Card Trade
+## Stress test
 
-- Eventually consistent to add a card
-- 2 Phase Commit for confirm the trade
+To run stress test, read the [Faint!'s documentation](./faint/Readme.md), this will give you the complete documentation of the CLI and also examples of usage. Make sure you're running your server locally for that. 
 
-### Match Making
+> [!TIP]
+> Enable OS tune for high concurrency by executing the script `tune.sh`.
 
-- Leader-Follower
-  - The Host is the leader and decides the state of the match
-  - The Guest must redirect the user's request and return back to the user
-  - Leader-Follower has simple election: the first player to request is the host
-- Simpler fault-tollerancy
-  - If the server goes down, the match ends
-  - The user must open the game in a new server to be able to play again
-  - Since this is stateless, there is no recover or consensus process at the end
+## Manually testing the system routes
+
+If you want to know if the system works well with external tools, you may use `curl` for any HTTP endpoint declared.
+Remember, if you need to change the method, use `-X <METHOD>` and a body, use `-d <BODY>`. Make sure you have your server running locally.
+
+### Account Creation Example
+
+```sh
+$ curl http://127.0.0.1:8080/accounts/
+$ curl -X POST http://127.0.0.1:8080/accounts/create/ -d '{"username": "Rick", "password": "123456"}'
+$ curl -X POST http://127.0.0.1:8080/accounts/login/ -d '{"username": "Rick", "password": "123456"}'
+```
