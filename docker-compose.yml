@@ -1,0 +1,33 @@
+version: "3.9"
+
+# Declare shared network between clients and server
+networks:
+  game_net:
+    driver: bridge
+
+services:
+  server:
+    build:
+      context: .
+      target: server
+    image: eleventh/server:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - ELEVENTH_ADDRESS=0.0.0.0:8080
+    networks:
+      - game_net
+
+  client:
+    build:
+      context: .
+      target: client
+    image: eleventh/client:latest
+    depends_on:
+      - server
+    environment:
+      - ELEVENTH_ADDRESS=server:8080
+    networks:
+      - game_net
+    stdin_open: true  # Allows the usage of terminal, 
+    tty: true         # since clients are interactive
